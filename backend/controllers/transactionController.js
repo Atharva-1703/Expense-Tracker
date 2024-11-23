@@ -47,6 +47,7 @@ exports.getFilteredTransactions = asyncHandler(async (req, res) => {
 
 exports.updateTransaction = asyncHandler(async (req, res) => {
   // ? find Transaction
+  const { type, amount, date, category, description } = req.body;
   const transaction = await Transactions.findById(req.params.id);
   if (!transaction) {
     throw new Error("Transaction not found");
@@ -54,5 +55,25 @@ exports.updateTransaction = asyncHandler(async (req, res) => {
   if (transaction.user.toString() !== req.user) {
     throw new Error("Unauthorized");
   }
-  
+  transaction.type = type || transaction.type;
+  transaction.category = category || transaction.category;
+  transaction.amount = amount || transaction.amount;
+  transaction.description = description || transaction.description;
+  transaction.date = date || transaction.date;
+  // ? update the transaction
+  const updatedTransaction = await transaction.save();
+  res.json(updatedTransaction);
+});
+
+exports.deleteTransaction = asyncHandler(async (req, res) => {
+  // ? find the transaction
+  const transaction = await Transactions.findById(req.params.id);
+  if (!transaction) {
+    throw new Error("Transaction not found");
+  }
+  if (transaction.user.toString() !== req.user.toString()) {
+    throw new Error("Unauthorized");
+  }
+  await Transactions.findByIdAndDelete(req.params.id);
+  res.json({ message: "Transaction deleted successfully" });
 });
