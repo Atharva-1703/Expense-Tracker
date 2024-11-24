@@ -8,6 +8,28 @@ const transactionRouter = require("./routes/transactionRoutes");
 const app = express();
 require("dotenv").config();
 const PORT = process.env.PORT || 3000;
+const cors = require("cors");
+
+// ? connect to mongodb
+mongoose
+  .connect(process.env.MONGODB_URL)
+  .then(() => {
+    console.log("Database Connected");
+
+    app.listen(PORT, () => console.log(`Server is running`));
+  })
+  .catch(() => {
+    console.log("Database Connection Failed");
+  });
+
+// ? cors config
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+  })
+);
 
 // ? middlewares
 app.use(express.urlencoded({ extended: true }));
@@ -27,15 +49,3 @@ app.use("/transaction", transactionRouter);
 
 // ? error handler
 app.use(errorHandler);
-
-// ? connect to mongodb
-mongoose
-  .connect(process.env.MONGODB_URL)
-  .then(() => {
-    console.log("Database Connected");
-
-    app.listen(PORT, () => console.log(`Server is running`));
-  })
-  .catch(() => {
-    console.log("Database Connection Failed");
-  });
