@@ -23,16 +23,12 @@ mongoose
   });
 
 // ? cors config
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true,
-  })
-);
+const corsOptions = {
+  origin: ["http://localhost:5173"],
+};
+app.use(cors(corsOptions));
 
 // ? middlewares
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // ? auth Routes
