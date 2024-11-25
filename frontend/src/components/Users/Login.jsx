@@ -1,9 +1,13 @@
 import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
+import { useDispatch } from "react-redux";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { loginAPI } from "../../services/userServices";
+import AlertMessage from "../Alert/AlertMessage";
+import { loginAction } from "../../redux/slice/authSlice";
 
 // ? validations
 const validationSchema = Yup.object({
@@ -15,6 +19,8 @@ const validationSchema = Yup.object({
     .required("Password is required"),
 });
 const LoginForm = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { mutateAsync, isPending, isError, error, isSuccess } = useMutation({
     mutationFn: loginAPI,
     mutationKey: ["login"],
@@ -22,23 +28,35 @@ const LoginForm = () => {
 
   const formik = useFormik({
     initialValues: {
-      email: "",
-      password: "",
+      // ? enter the login password here for quick login or to avoid re entering the credentials
+      email: "doe@gmail.com",
+      password: "12345678",
     },
     // ? validation
-    validationSchema: validationSchema,
+    validationSchema,
     // ? submit
     onSubmit: (values) => {
       // ? http request
       mutateAsync(values)
         .then((data) => {
-          console.log(data);
+          // ? dispatch the action
+          dispatch(loginAction(data));
+          // ? save the user in the localstorage
+          localStorage.setItem("userInfo", JSON.stringify(data));
         })
         .catch((e) => {
           console.log(e);
         });
     },
   });
+
+  // ? redirect
+  useEffect(() => {
+    setTimeout(() => {
+      if (isSuccess) navigate("/");
+    }, 1000);
+  }, [isPending, isSuccess, isError, error]);
+
   return (
     <form
       onSubmit={formik.handleSubmit}
@@ -48,6 +66,14 @@ const LoginForm = () => {
         Login
       </h2>
       {/* Display messages */}
+
+      {isPending && <AlertMessage type="loading" message="Logging you In .." />}
+      {isError && (
+        <AlertMessage type="error" message={error.response.data.message} />
+      )}
+      {isSuccess && (
+        <AlertMessage type="success" message="Logged In Successfully" />
+      )}
 
       <p className="text-sm text-center text-gray-500">
         Login to access your account

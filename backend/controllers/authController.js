@@ -16,7 +16,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
   const userFound = await User.findOne({ email });
 
   if (userFound) {
-    console.log(userFound);
+    // console.log(userFound);
 
     throw new Error("User already exists");
   }
