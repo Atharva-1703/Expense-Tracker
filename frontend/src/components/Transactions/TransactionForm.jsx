@@ -21,9 +21,23 @@ const validationSchema = Yup.object({
 });
 
 const TransactionForm = () => {
+  const formik = useFormik({
+    initialValues: {
+      type: "",
+      amount: "",
+      category: "",
+      date: "",
+      description: "",
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      console.log(values);
+    },
+  });
+
   return (
     <form
-      onSubmit={formik.handleSubmit}
+      // onSubmit={formik.handleSubmit}
       className="max-w-lg mx-auto my-10 bg-white p-6 rounded-lg shadow-lg space-y-6"
     >
       <div className="text-center">
@@ -44,7 +58,7 @@ const TransactionForm = () => {
           <span>Type</span>
         </label>
         <select
-          {...formik.getFieldProps("type")}
+          // {...formik.getFieldProps("type")}
           id="type"
           className="block w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
         >
@@ -52,9 +66,9 @@ const TransactionForm = () => {
           <option value="income">Income</option>
           <option value="expense">Expense</option>
         </select>
-        {formik.touched.type && formik.errors.type && (
+        {/* {formik.touched.type && formik.errors.type && (
           <p className="text-red-500 text-xs">{formik.errors.type}</p>
-        )}
+        )} */}
       </div>
 
       {/* Amount Field */}
@@ -65,14 +79,14 @@ const TransactionForm = () => {
         </label>
         <input
           type="number"
-          {...formik.getFieldProps("amount")}
+          // {...formik.getFieldProps("amount")}
           id="amount"
           placeholder="Amount"
           className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
         />
-        {formik.touched.amount && formik.errors.amount && (
+        {/* {formik.touched.amount && formik.errors.amount && (
           <p className="text-red-500 text-xs italic">{formik.errors.amount}</p>
-        )}
+        )} */}
       </div>
 
       {/* Category Field */}
@@ -82,17 +96,17 @@ const TransactionForm = () => {
           Category
         </label>
         <select
-          {...formik.getFieldProps("category")}
+          // {...formik.getFieldProps("category")}
           id="category"
           className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
         >
           <option value="">Select a category</option>
         </select>
-        {formik.touched.category && formik.errors.category && (
+        {/* {formik.touched.category && formik.errors.category && (
           <p className="text-red-500 text-xs italic">
             {formik.errors.category}
           </p>
-        )}
+        )} */}
       </div>
 
       {/* Date Field */}
@@ -103,13 +117,13 @@ const TransactionForm = () => {
         </label>
         <input
           type="date"
-          {...formik.getFieldProps("date")}
+          // {...formik.getFieldProps("date")}
           id="date"
           className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
         />
-        {formik.touched.date && formik.errors.date && (
+        {/* {formik.touched.date && formik.errors.date && (
           <p className="text-red-500 text-xs italic">{formik.errors.date}</p>
-        )}
+        )} */}
       </div>
 
       {/* Description Field */}
@@ -119,17 +133,17 @@ const TransactionForm = () => {
           Description (Optional)
         </label>
         <textarea
-          {...formik.getFieldProps("description")}
+          // {...formik.getFieldProps("description")}
           id="description"
           placeholder="Description"
           rows="3"
           className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
         ></textarea>
-        {formik.touched.description && formik.errors.description && (
+        {/* {formik.touched.description && formik.errors.description && (
           <p className="text-red-500 text-xs italic">
             {formik.errors.description}
           </p>
-        )}
+        )} */}
       </div>
 
       {/* Submit Button */}

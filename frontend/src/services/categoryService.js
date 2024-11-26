@@ -1,11 +1,10 @@
 import axios from "axios";
 import { BASE_URL } from "../utils/url";
 import { getUserFromStorage } from "../utils/getUserInfo";
-// ? get the token
-const token = getUserFromStorage();
 
 // ? add category
 export const addCategoryAPI = async ({ type, name }) => {
+  const token = getUserFromStorage();
   const response = await axios.post(
     `${BASE_URL}/category/create`,
     {
@@ -23,6 +22,7 @@ export const addCategoryAPI = async ({ type, name }) => {
 
 // ? list categories
 export const listCategoriesAPI = async () => {
+  const token = getUserFromStorage();
   const response = await axios.get(`${BASE_URL}/category/lists`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -34,6 +34,7 @@ export const listCategoriesAPI = async () => {
 
 // ? update category
 export const updateCategoryAPI = async ({ type, name, id }) => {
+  const token = getUserFromStorage();
   const response = await axios.put(
     `${BASE_URL}/category/update/${id}`,
     {
@@ -51,6 +52,7 @@ export const updateCategoryAPI = async ({ type, name, id }) => {
 
 // ? delete category
 export const deleteCategoryAPI = async (id) => {
+  const token = getUserFromStorage();
   const response = await axios.delete(`${BASE_URL}/category/delete/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
