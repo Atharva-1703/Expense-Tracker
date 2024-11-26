@@ -10,23 +10,42 @@ import {
 import { SiDatabricks } from "react-icons/si";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
+import { updateCategoryAPI } from "../../services/categoryService";
+import AlertMessage from "../Alert/AlertMessage";
 
 const validationSchema = Yup.object({
-  name: Yup.string()
-    .required("Category name is required")
-    .oneOf(["income", "expense"]),
+  name: Yup.string().required("Category name is required"),
   type: Yup.string()
     .required("Category type is required")
     .oneOf(["income", "expense"]),
 });
 
 const UpdateCategory = () => {
+  const navigate = useNavigate();
+  const params = useParams();
+  const { mutateAsync, isError, error, isSuccess, isPending } = useMutation({
+    mutationFn: updateCategoryAPI,
+    mutationKey: ["updateCategory"],
+  });
+  console.log(isError, error, isSuccess);
+
   const formik = useFormik({
     initialValues: {
       type: "",
       name: "",
     },
-    onSubmit: (values) => {},
+    validationSchema,
+    onSubmit: (values) => {
+      values.id = params.id;
+
+      mutateAsync(values)
+        .then((data) => {
+          navigate("/categories");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   });
 
   return (
@@ -41,7 +60,7 @@ const UpdateCategory = () => {
         <p className="text-gray-600">Fill in the details below.</p>
       </div>
       {/* Display alert message */}
-      {/* {isError && (
+      {isError && (
         <AlertMessage
           type="error"
           message={
@@ -50,12 +69,15 @@ const UpdateCategory = () => {
           }
         />
       )}
+      {isPending && (
+        <AlertMessage type="loading" message="Updating category..." />
+      )}
       {isSuccess && (
         <AlertMessage
           type="success"
           message="Category updated successfully, redirecting..."
         />
-      )} */}
+      )}
       {/* Category Type */}
       <div className="space-y-2">
         <label
@@ -66,8 +88,8 @@ const UpdateCategory = () => {
           <span>Type</span>
         </label>
         <select
-          {...formik.getFieldProps("type")}
           id="type"
+          {...formik.getFieldProps("type")}
           className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
         >
           <option value="">Select transaction type</option>
