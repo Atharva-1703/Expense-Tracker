@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import AlertMessage from "../Alert/AlertMessage";
 import {
   FaDollarSign,
   FaCalendarAlt,
@@ -10,23 +11,36 @@ import {
 import { SiDatabricks } from "react-icons/si";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { addCategoryAPI } from "../../services/categoryService";
 
 const validationSchema = Yup.object({
-  name: Yup.string()
-    .required("Category name is required")
-    .oneOf(["income", "expense"]),
+  name: Yup.string().required("Category name is required"),
   type: Yup.string()
     .required("Category type is required")
     .oneOf(["income", "expense"]),
 });
 
 const AddCategory = () => {
+  const navigate = useNavigate();
+  const { mutateAsync, isPending, isError, error, isSuccess } = useMutation({
+    mutationFn: addCategoryAPI,
+    mutationKey: ["addCategory"],
+  });
   const formik = useFormik({
     initialValues: {
       type: "",
       name: "",
     },
-    onSubmit: (values) => {},
+    validationSchema,
+    onSubmit: (values) => {
+      mutateAsync(values)
+        .then((data) => {
+          navigate("/categories");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   });
 
   return (

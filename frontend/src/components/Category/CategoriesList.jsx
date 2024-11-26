@@ -1,14 +1,27 @@
 import React from "react";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import AlertMessage from "../Alert/AlertMessage";
 import { Link } from "react-router-dom";
+import { listCategoriesAPI } from "../../services/categoryService";
 
 const CategoriesList = () => {
+  const { data, isError, isLoading, isFetched, error } = useQuery({
+    queryKey: ["categories"],
+    queryFn: listCategoriesAPI,
+  });
+
   return (
     <div className="max-w-md mx-auto my-10 bg-white p-6 rounded-lg shadow-lg">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">Categories</h2>
+      {isLoading && (
+        <AlertMessage type="loading" message="Fetching categories..." />
+      )}
+      {isError && (
+        <AlertMessage type="error" message={error.response.data.message} />
+      )}
       <ul className="space-y-4">
-        {[1, 1]?.map((category) => (
+        {data?.map((category) => (
           <li
             key={category?._id}
             className="flex justify-between items-center bg-gray-50 p-3 rounded-md"

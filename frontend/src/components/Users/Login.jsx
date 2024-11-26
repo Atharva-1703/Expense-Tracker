@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { FaEnvelope, FaLock } from "react-icons/fa";
-import { loginAPI } from "../../services/userServices";
+import { loginAPI } from "../../services/userService";
 import AlertMessage from "../Alert/AlertMessage";
 import { loginAction } from "../../redux/slice/authSlice";
 
