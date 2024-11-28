@@ -1,13 +1,14 @@
 import React from "react";
-import TransactionList from "../Transactions/TransactionList";
+
 import TransactionChart from "../Transactions/TransactionChart";
-import FilterSection from "../Transactions/FilterSection";
+
+import TransactionsList from "../Transactions/TransactionsList";
 
 const Dashboard = () => {
   return (
     <>
       <TransactionChart />
-      <FilterSection />
+      <TransactionsList />
     </>
   );
 };
