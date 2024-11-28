@@ -10,6 +10,8 @@ import CategoriesList from "./components/Category/CategoriesList";
 import UpdateCategory from "./components/Category/UpdateCategory";
 import TransactionForm from "./components/Transactions/TransactionForm";
 import Dashboard from "./components/Users/Dashboard";
+import TransactionUpdate from "./components/Transactions/TransactionUpdate";
+import UserProfile from "./components/Users/UserProfile";
 
 function App() {
   // ? get token
@@ -28,6 +30,8 @@ function App() {
         <Route path="/update-category/:id" element={<UpdateCategory />} />
         <Route path="/add-transaction" element={<TransactionForm />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile" element={<UserProfile />} />
+        <Route path="/update-transaction/:id" element={<TransactionUpdate />} />
       </Routes>
     </BrowserRouter>
   );

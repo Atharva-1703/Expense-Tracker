@@ -3,10 +3,18 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { FaTrash, FaEdit } from "react-icons/fa";
 
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
-import { listTransactionsAPI } from "../../services/transactionService";
+import {
+  deleteTransactionAPI,
+  listTransactionsAPI,
+} from "../../services/transactionService";
 import { listCategoriesAPI } from "../../services/categoryService";
+import { Link } from "react-router-dom";
 
 const TransactionsList = () => {
+  const { mutateAsync, isError, isPending, isSuccess, error } = useMutation({
+    mutationFn: deleteTransactionAPI,
+    mutationKey: ["deleteTransaction"],
+  });
   // ? Filtering states
   const [filters, setFilters] = useState({
     startDate: "",
@@ -20,6 +28,14 @@ const TransactionsList = () => {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleDelete = async (id) => {
+    mutateAsync(id)
+      .then((data) => {
+        refetch();
+      })
+      .catch((error) => console.log(error));
+  };
+
   // ? fetch categories
   const { data: categories } = useQuery({
     queryKey: ["categories"],
@@ -28,9 +44,9 @@ const TransactionsList = () => {
   // ? fetch transactions
   const {
     data: transactions,
-    isError,
+    isError: transactionIsError,
     isFetched,
-    error,
+    error: transactionError,
     refetch,
     isLoading,
   } = useQuery({
@@ -127,12 +143,11 @@ const TransactionsList = () => {
                   </span>
                 </div>
                 <div className="flex space-x-3">
-                  <button
-                    onClick={() => handleUpdateTransaction(transaction.id)}
-                    className="text-blue-500 hover:text-blue-700"
-                  >
-                    <FaEdit />
-                  </button>
+                  <Link to={`/update-transaction/${transaction._id}`}>
+                    <button className="text-blue-500 hover:text-blue-700">
+                      <FaEdit />
+                    </button>
+                  </Link>
                   <button
                     onClick={() => handleDelete(transaction._id)}
                     className="text-red-500 hover:text-red-700"

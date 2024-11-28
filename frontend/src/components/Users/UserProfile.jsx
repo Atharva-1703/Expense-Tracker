@@ -2,8 +2,22 @@ import React from "react";
 import { FaUserCircle, FaEnvelope, FaLock } from "react-icons/fa";
 import { useFormik } from "formik";
 import UpdatePassword from "./UpdatePassword";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { getProfileAPI, updateProfileAPI } from "../../services/userService";
+import AlertMessage from "../Alert/AlertMessage";
 
 const UserProfile = () => {
+  const user = useSelector((state) => state?.auth?.user);
+  const { data, refetch } = useQuery({
+    queryKey: ["profile"],
+    queryFn: getProfileAPI,
+  });
+  const { mutateAsync, isLoading, isError, error, isSuccess } = useMutation({
+    mutationFn: updateProfileAPI,
+    mutationKey: ["update-profile"],
+  });
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -12,16 +26,35 @@ const UserProfile = () => {
 
     //Submit
     onSubmit: (values) => {
-      console.log(values);
+      mutateAsync(values)
+        .then((data) => {
+          refetch();
+        })
+        .catch((error) => console.log(error));
     },
   });
   return (
     <>
       <div className="max-w-4xl mx-auto my-10 p-8 bg-white rounded-lg shadow-md">
         <h1 className="mb-2 text-2xl text-center font-extrabold">
-          Welcome Masynctech
-          <span className="text-gray-500 text-sm ml-2">info@gmail.com</span>
+          Welcome {data?.username}
+          <span className="text-gray-500 text-sm ml-2">{data?.email}</span>
         </h1>
+
+        {isError && (
+          <AlertMessage
+            type="error"
+            message={"The Email is already registered in the system"}
+          />
+        )}
+        {isLoading && (
+          <AlertMessage
+            type="loading"
+            message="Updating your profile..."
+            loading={isLoading}
+          />
+        )}
+
         <h3 className="text-xl font-semibold text-gray-800 mb-4">
           Update Profile
         </h3>
