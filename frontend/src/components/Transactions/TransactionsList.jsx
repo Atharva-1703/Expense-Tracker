@@ -143,7 +143,10 @@ const TransactionsList = () => {
                   </span>
                 </div>
                 <div className="flex space-x-3">
-                  <Link to={`/update-transaction/${transaction._id}`}>
+                  <Link
+                    to={`/update-transaction/${transaction._id}`}
+                    state={transaction}
+                  >
                     <button className="text-blue-500 hover:text-blue-700">
                       <FaEdit />
                     </button>

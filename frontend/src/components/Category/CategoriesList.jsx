@@ -53,7 +53,7 @@ const CategoriesList = () => {
               </span>
             </div>
             <div className="flex space-x-3">
-              <Link to={`/update-category/${category._id}`}>
+              <Link to={`/update-category/${category._id}`} state={category}>
                 <button className="text-blue-500 hover:text-blue-700">
                   <FaEdit />
                 </button>

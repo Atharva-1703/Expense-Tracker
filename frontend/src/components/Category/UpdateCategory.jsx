@@ -9,7 +9,7 @@ import {
 } from "react-icons/fa";
 import { SiDatabricks } from "react-icons/si";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { updateCategoryAPI } from "../../services/categoryService";
 import AlertMessage from "../Alert/AlertMessage";
 
@@ -21,6 +21,8 @@ const validationSchema = Yup.object({
 });
 
 const UpdateCategory = () => {
+  const location = useLocation();
+  const category = location?.state;
   const navigate = useNavigate();
   const params = useParams();
   const { mutateAsync, isError, error, isSuccess, isPending } = useMutation({
@@ -31,22 +33,25 @@ const UpdateCategory = () => {
 
   const formik = useFormik({
     initialValues: {
-      type: "",
-      name: "",
+      type: category?.type || "",
+      name: category?.name || "",
     },
     validationSchema,
     onSubmit: (values) => {
       values.id = params.id;
 
       mutateAsync(values)
-        .then((data) => {
-          navigate("/categories");
-        })
+        .then((data) => {})
         .catch((error) => {
           console.log(error);
         });
     },
   });
+  useEffect(() => {
+    setTimeout(() => {
+      if (isSuccess) navigate("/categories");
+    }, 1000);
+  }, [isPending, isSuccess, isError, error]);
 
   return (
     <form

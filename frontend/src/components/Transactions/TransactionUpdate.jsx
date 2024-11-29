@@ -7,10 +7,14 @@ import {
   FaRegCommentDots,
   FaWallet,
 } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { listCategoriesAPI } from "../../services/categoryService";
-import { addTransactionAPI } from "../../services/transactionService";
+import {
+  addTransactionAPI,
+  updateTransactionAPI,
+} from "../../services/transactionService";
+import AlertMessage from "../Alert/AlertMessage";
 
 const validationSchema = Yup.object({
   type: Yup.string()
@@ -25,32 +29,42 @@ const validationSchema = Yup.object({
 });
 
 const TransactionUpdate = () => {
+  const location = useLocation();
+  const params = useParams();
+  const transaction = location.state;
+  // console.log(transaction);
+
   const { data, refetch } = useQuery({
     queryKey: ["categories"],
     queryFn: listCategoriesAPI,
   });
   const navigate = useNavigate();
   const { mutateAsync, isError, isPending, isSuccess, error } = useMutation({
-    mutationKey: ["addTransaction"],
-    mutationFn: addTransactionAPI,
+    mutationKey: ["updateTransaction"],
+    mutationFn: updateTransactionAPI,
   });
   const formik = useFormik({
     initialValues: {
-      type: "",
-      amount: "",
-      category: "",
-      date: "",
-      description: "",
+      type: transaction?.type || "",
+      amount: transaction?.amount || "",
+      category: transaction?.category || "",
+      date: transaction?.date?.split("T")[0] || "",
+      description: transaction?.description || "",
     },
     validationSchema,
     onSubmit: (values) => {
+      // console.log(values);
+      values.id = params.id;
       mutateAsync(values)
-        .then((data) => {
-          navigate("/dashboard");
-        })
+        .then((data) => {})
         .catch((error) => console.log(error));
     },
   });
+  useEffect(() => {
+    setTimeout(() => {
+      if (isSuccess) navigate("/categories");
+    }, 1000);
+  }, [isPending, isSuccess, isError, error]);
 
   return (
     <form
@@ -64,6 +78,12 @@ const TransactionUpdate = () => {
         <p className="text-gray-600">Fill in the details below.</p>
       </div>
       {/* Display alert message */}
+      {isError && (
+        <AlertMessage type="error" message={error.response.data.message} />
+      )}
+      {isSuccess && (
+        <AlertMessage type="success" message={"Transaction updated"} />
+      )}
 
       {/* Transaction Type Field */}
       <div className="space-y-2">
@@ -98,7 +118,6 @@ const TransactionUpdate = () => {
           type="number"
           {...formik.getFieldProps("amount")}
           id="amount"
-          placeholder="Amount"
           className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
         />
         {formik.touched.amount && formik.errors.amount && (
