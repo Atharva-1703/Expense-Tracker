@@ -1,15 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import AlertMessage from "../Alert/AlertMessage";
-import {
-  FaDollarSign,
-  FaCalendarAlt,
-  FaRegCommentDots,
-  FaWallet,
-} from "react-icons/fa";
+import { FaWallet } from "react-icons/fa";
 import { SiDatabricks } from "react-icons/si";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { addCategoryAPI } from "../../services/categoryService";
 

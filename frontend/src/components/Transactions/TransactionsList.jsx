@@ -11,7 +11,7 @@ import { listCategoriesAPI } from "../../services/categoryService";
 import { Link } from "react-router-dom";
 
 const TransactionsList = () => {
-  const { mutateAsync, isError, isPending, isSuccess, error } = useMutation({
+  const { mutateAsync } = useMutation({
     mutationFn: deleteTransactionAPI,
     mutationKey: ["deleteTransaction"],
   });
@@ -42,14 +42,7 @@ const TransactionsList = () => {
     queryFn: listCategoriesAPI,
   });
   // ? fetch transactions
-  const {
-    data: transactions,
-    isError: transactionIsError,
-    isFetched,
-    error: transactionError,
-    refetch,
-    isLoading,
-  } = useQuery({
+  const { data: transactions, refetch } = useQuery({
     queryFn: () => listTransactionsAPI(filters),
     queryKey: ["transactions", filters],
   });

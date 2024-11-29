@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { listCategoriesAPI } from "../../services/categoryService";
 import { addTransactionAPI } from "../../services/transactionService";
+import AlertMessage from "../Alert/AlertMessage";
 
 const validationSchema = Yup.object({
   type: Yup.string()
@@ -25,7 +26,7 @@ const validationSchema = Yup.object({
 });
 
 const TransactionForm = () => {
-  const { data, refetch } = useQuery({
+  const { data } = useQuery({
     queryKey: ["categories"],
     queryFn: listCategoriesAPI,
   });
@@ -64,6 +65,14 @@ const TransactionForm = () => {
         <p className="text-gray-600">Fill in the details below.</p>
       </div>
       {/* Display alert message */}
+
+      {isError && (
+        <AlertMessage type={"error"} message={error.response.data.message} />
+      )}
+
+      {isPending && (
+        <AlertMessage type="loading" message="Adding transaction..." />
+      )}
 
       {/* Transaction Type Field */}
       <div className="space-y-2">

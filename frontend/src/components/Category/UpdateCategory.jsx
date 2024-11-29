@@ -1,14 +1,9 @@
 import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import {
-  FaDollarSign,
-  FaCalendarAlt,
-  FaRegCommentDots,
-  FaWallet,
-} from "react-icons/fa";
+import { FaWallet } from "react-icons/fa";
 import { SiDatabricks } from "react-icons/si";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { updateCategoryAPI } from "../../services/categoryService";
 import AlertMessage from "../Alert/AlertMessage";
@@ -29,7 +24,6 @@ const UpdateCategory = () => {
     mutationFn: updateCategoryAPI,
     mutationKey: ["updateCategory"],
   });
-  console.log(isError, error, isSuccess);
 
   const formik = useFormik({
     initialValues: {

@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-  plugins,
-} from "chart.js";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { useQuery } from "@tanstack/react-query";
 import { listTransactionsAPI } from "../../services/transactionService";
@@ -14,14 +8,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 const TransactionChart = () => {
   // ? fetch transactions
-  const {
-    data: transactions,
-    isError,
-    isFetched,
-    error,
-    refetch,
-    isLoading,
-  } = useQuery({
+  const { data: transactions } = useQuery({
     queryFn: listTransactionsAPI,
     queryKey: ["transactions"],
   });

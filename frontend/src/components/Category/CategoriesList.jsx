@@ -2,15 +2,14 @@ import React from "react";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import AlertMessage from "../Alert/AlertMessage";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   deleteCategoryAPI,
   listCategoriesAPI,
 } from "../../services/categoryService";
 
 const CategoriesList = () => {
-  const navigate = useNavigate();
-  const { data, isError, isLoading, isFetched, error, refetch } = useQuery({
+  const { data, isError, isLoading, error, refetch } = useQuery({
     queryKey: ["categories"],
     queryFn: listCategoriesAPI,
   });

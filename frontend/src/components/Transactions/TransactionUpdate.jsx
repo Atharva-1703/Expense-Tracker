@@ -7,13 +7,10 @@ import {
   FaRegCommentDots,
   FaWallet,
 } from "react-icons/fa";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { listCategoriesAPI } from "../../services/categoryService";
-import {
-  addTransactionAPI,
-  updateTransactionAPI,
-} from "../../services/transactionService";
+import { updateTransactionAPI } from "../../services/transactionService";
 import AlertMessage from "../Alert/AlertMessage";
 
 const validationSchema = Yup.object({
@@ -34,7 +31,7 @@ const TransactionUpdate = () => {
   const transaction = location.state;
   // console.log(transaction);
 
-  const { data, refetch } = useQuery({
+  const { data } = useQuery({
     queryKey: ["categories"],
     queryFn: listCategoriesAPI,
   });
@@ -62,7 +59,7 @@ const TransactionUpdate = () => {
   });
   useEffect(() => {
     setTimeout(() => {
-      if (isSuccess) navigate("/categories");
+      if (isSuccess) navigate("/dashboard");
     }, 1000);
   }, [isPending, isSuccess, isError, error]);
 
@@ -83,6 +80,9 @@ const TransactionUpdate = () => {
       )}
       {isSuccess && (
         <AlertMessage type="success" message={"Transaction updated"} />
+      )}
+      {isPending && (
+        <AlertMessage type="loading" message={"updating transaction"} />
       )}
 
       {/* Transaction Type Field */}

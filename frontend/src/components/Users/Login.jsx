@@ -29,8 +29,8 @@ const LoginForm = () => {
   const formik = useFormik({
     initialValues: {
       // ? enter the login password here for quick login or to avoid re entering the credentials
-      email: "doe@gmail.com",
-      password: "12345678",
+      email: "",
+      password: "",
     },
     // ? validation
     validationSchema,
