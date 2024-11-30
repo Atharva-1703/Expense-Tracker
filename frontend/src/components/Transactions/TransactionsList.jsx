@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FaTrash, FaEdit } from "react-icons/fa";
 
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
@@ -11,6 +11,8 @@ import { listCategoriesAPI } from "../../services/categoryService";
 import { Link } from "react-router-dom";
 
 const TransactionsList = () => {
+  const queryClient = useQueryClient();
+  const isDeleting = false;
   const { mutateAsync } = useMutation({
     mutationFn: deleteTransactionAPI,
     mutationKey: ["deleteTransaction"],
@@ -31,7 +33,7 @@ const TransactionsList = () => {
   const handleDelete = async (id) => {
     mutateAsync(id)
       .then((data) => {
-        refetch();
+        queryClient.refetchQueries(["transactions", filters]);
       })
       .catch((error) => console.log(error));
   };
