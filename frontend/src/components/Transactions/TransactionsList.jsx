@@ -12,7 +12,6 @@ import { Link } from "react-router-dom";
 
 const TransactionsList = () => {
   const queryClient = useQueryClient();
-  const isDeleting = false;
   const { mutateAsync } = useMutation({
     mutationFn: deleteTransactionAPI,
     mutationKey: ["deleteTransaction"],
